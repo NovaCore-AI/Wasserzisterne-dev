@@ -1,6 +1,6 @@
 # Empfehlungssystem wasserzisterne.de — Kickoff
 
-**Stakeholder:** Hein (Auftraggeber)  ·  **Termin:** Dienstag, 23.06.2026  ·  **Team:** 2 Personen (~15–20 h/Woche gesamt)
+**Stakeholder:** Christian Hein (Auftraggeber)  ·  **Termin:** Dienstag, 23.06.2026  ·  **Team:** 2 Personen
 **Grundlage:** `Projektplan Empfehlungssystem.md` v1.1 (reviewed & ergebnisgesichert)
 
 > Dies ist der Projekt-Kickoff: Projektplan, Phasen, Milestones, KPIs, Risiken und die Entscheidungen, die wir für den Start brauchen. Das fachliche Konzept (Seiten, Flows, Design) ist aus `Empfehlungssystem.pdf` bekannt und nicht Gegenstand dieses Termins.
@@ -9,7 +9,7 @@
 
 ## 1 · Auftrag & Lieferversprechen
 
-Ablösung von **TELLSCALE** (gekündigt) durch ein **eigenentwickeltes** Empfehlungssystem auf **eurem Hetzner-Server**, verzahnt mit eurem Bestand (KlickTipp, WooCommerce, SafeDesk, n8n). Ziel-Domain: `empfehlung.wasserzisterne.de`.
+Ablösung von **TELLSCALE** (gekündigt) durch ein **eigenentwickeltes** Empfehlungssystem auf **eurem Hetzner-Server**, verzahnt mit eurem Bestand (KlickTipp, WooCommerce, sevDesk, n8n). Ziel-Domain: `empfehlung.wasserzisterne.de`.
 
 **Was wir liefern (Lieferumfang nach Priorität):**
 
@@ -29,7 +29,7 @@ Ablösung von **TELLSCALE** (gekündigt) durch ein **eigenentwickeltes** Empfehl
   backend-first  →  erst das verlässliche Fundament (Zuordnung, Gutschein-Sicherheit),
                     dann die Oberflächen. Das Geschäftskritische steht zuerst sicher.
 
-  Qualität:   Staging vor Produktion · CI/CD über GitLab · Tests auf dem kritischen Pfad
+  Qualität:   Staging vor Produktion · CI/CD + automatisiertes Deploy · Tests auf dem kritischen Pfad
   Steuerung:  klare Schnitt-Verantwortung — App besitzt Daten/Logik, n8n besitzt alle
               Verbindungen zu Fremdsystemen, KlickTipp behält die Kampagnen-Hoheit
 ```
@@ -50,17 +50,16 @@ Ablösung von **TELLSCALE** (gekündigt) durch ein **eigenentwickeltes** Empfehl
  Meilenstein  ◆M0      ◆M1        ◆M2      ◆M3     ◆M4      ◆M5
 ```
 
-| Phase | Inhalt | Aufwand |
-|-------|--------|:------:|
-| **0 · Infrastruktur** | Server, PostgreSQL, Reverse-Proxy/SSL, DNS, GitLab+CI, n8n/Secrets/Backup, Testzugänge | ~22 h |
-| **1 · Datenmodell + Core** | Schema/Migrations, Token-/Short-Link + Redirect, Tracking, NPS-API, Promotor+Consent, QR, Branding-Basis | ~37 h |
-| **2 · Attribution + Reward** | Lead-Capture, Order-Ingest, bidirektionales Matching, Mehrfach-Match-Guard, Reward-State-Machine, Gutschein-Mail | ~50 h |
-| **3 · Öffentliche Seiten** | C1/D1 (mobil), E1 (Neukunde), C2/D2 (Desktop), Feedback, Fragebogen | ~33 h |
-| **4 · Admin-Panel** | Auth+Audit, Promotoren CRUD/CSV, Referral-Status, Lookup, manuelle Zuordnung, Reward-Approval, Dashboard | ~27 h |
-| **5 · Integration & Launch** | n8n-Flows final, E2E-Tests, Mobile/Cross-Browser, Go-Live + Monitoring | ~22 h |
-| | **Gesamt** | **~191 h** |
+| Phase | Inhalt |
+|-------|--------|
+| **0 · Infrastruktur** | Server, PostgreSQL, Reverse-Proxy/SSL, DNS, CI/CD + Staging, n8n/Secrets/Backup, Testzugänge |
+| **1 · Datenmodell + Core** | Schema/Migrations, Token-/Short-Link + Redirect, Tracking, NPS-API, Promotor+Consent, QR, Branding-Basis |
+| **2 · Attribution + Reward** | Lead-Capture, Order-Ingest, bidirektionales Matching, Mehrfach-Match-Guard, Reward-State-Machine, Gutschein-Mail |
+| **3 · Öffentliche Seiten** | C1/D1 (mobil), E1 (Neukunde), C2/D2 (Desktop), Feedback, Fragebogen |
+| **4 · Admin-Panel** | Auth+Audit, Promotoren CRUD/CSV, Referral-Status, Lookup, manuelle Zuordnung, Reward-Approval, Dashboard |
+| **5 · Integration & Launch** | n8n-Flows final, E2E-Tests, Mobile/Cross-Browser, Go-Live + Monitoring |
 
-**Dauer: ~10–13 Wochen** (bei 15–20 h/Woche gesamt; bei höherer Auslastung entsprechend früher).
+**Dauer: ~10–14 Wochen** (Richtwert; bei höherer Auslastung entsprechend früher). Detaillierte Aufwände führen wir intern und konkretisieren sie je Phase nach den Kickoff-Entscheidungen A1–A4.
 
 ---
 
@@ -112,7 +111,7 @@ Ablösung von **TELLSCALE** (gekündigt) durch ein **eigenentwickeltes** Empfehl
 
 ---
 
-## 7 · ⭐ Kickoff-Entscheidungen (Gate für den Start)
+## 7 · Kickoff-Entscheidungen (Gate für den Start)
 
 Vier Punkte müssen entschieden sein, sonst bauen wir an einer Stelle ins Blaue. Für jeden gibt es einen **baubaren Default** — bestätigen oder anders entscheiden.
 
@@ -123,7 +122,9 @@ Vier Punkte müssen entschieden sein, sonst bauen wir an einer Stelle ins Blaue.
 | **A3** | Gutschein-Bedingung | Fester Mindestbestellwert **oder** definierte Produktliste | Phase 2 **&** 3 | ☐ |
 | **A4** | Gutschein-Ausführung (Streamendous) | Backend prüft & triggert, Streamendous führt aus, Code per Mail | Phase 2 | ☐ |
 
-**Zu bestätigende Annahmen:** WordPress nur verlinken (kein Plugin) · Match-Zeitfenster 90 Tage · Gutschein-Mail über KlickTipp · GitLab auf bestehendem Hetzner-Server.
+**Zu bestätigende Annahmen:** WordPress nur verlinken (kein Plugin) · Match-Zeitfenster 90 Tage · Gutschein-Mail über KlickTipp.
+
+> **Offener Punkt — Deploy-/Staging-Plattform:** Ihr habt bereits **Coolify** auf dem Hetzner-Server (deckt Deploy, SSL/Reverse-Proxy und Staging, ggf. auch PostgreSQL ab). Im Kickoff zu klären: nutzen wir **Coolify** als Deploy-/Staging-Plattform (und testen direkt bei euch), oder setzen wir ein eigenes **GitLab-CI + Reverse-Proxy** auf? Die Entscheidung beeinflusst den Umfang von **Phase 0**.
 
 ---
 
@@ -133,7 +134,7 @@ Vier Punkte müssen entschieden sein, sonst bauen wir an einer Stelle ins Blaue.
 |-----|---------------|
 | **Entwicklungsteam (2)** | Bau, Tests, Deployment, Doku — gemäß Phasenplan |
 | **n8n / KlickTipp** | Integrations-Orchestrierung bzw. Kampagnen- & Mailversand (Bestand) |
-| **Auftraggeber (Hein)** | A1–A4 entscheiden · Zugänge bereitstellen · Branding & Video liefern · Abnahme je Milestone |
+| **Auftraggeber (Christian Hein)** | A1–A4 entscheiden · Zugänge bereitstellen · Branding & Video liefern · Abnahme je Milestone |
 
 **Für den Start benötigte Zugänge:** KlickTipp-API-Key · WooCommerce-Webhook · Streamendous-API/Doku · Branding (Logo SVG + Hex-Farben) · Vimeo-URL · etermin-Prefill-Doku · DNS-Freigabe.
 
@@ -141,8 +142,8 @@ Vier Punkte müssen entschieden sein, sonst bauen wir an einer Stelle ins Blaue.
 
 ## 9 · Nächste Schritte
 
-1. **Heute:** A1–A4 entscheiden, Annahmen bestätigen, Zugänge anstoßen.
-2. **Diese Woche:** Phase 0 starten (DNS, Server, DB, CI/Staging) → **M0**.
-3. **Danach:** Fundament & Attribution bauen — das Herzstück zuerst.
+1. A1–A4 entscheiden, Annahmen bestätigen, Zugänge anstoßen.
+2. Phase 0 starten (DNS, Server, DB, CI/Staging) → **M0**.
+3. Fundament & Attribution bauen — das Herzstück zuerst.
 
 > Mit den vier entschiedenen Punkten ist das Projekt **kickoffbereit** und startet ohne weitere Rückfragen.
